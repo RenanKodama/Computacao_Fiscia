@@ -1,41 +1,53 @@
 
-#define USE_ARDUINO_INTERRUPTS true    // Set-up low-level interrupts for most acurate BPM math.
+#define USE_ARDUINO_INTERRUPTS true    
 
-#include <PulseSensorPlayground.h> // Includes the PulseSensorPlayground Library. 
+#include <PulseSensorPlayground.h> 
 #include <LiquidCrystal.h>
 
-
-
-
-// initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 
-int sensorBatimentos = 4;
-volatile int sinal;
+PulseSensorPlayground pulseSensor;
+const int Pulse = 4;    //leitor BPM
+const int Led13 = 13;   //led
+int Signal;            //sinal
+int Hold = 550;
 
 
 void setup() {
-  // set up the LCD's number of columns and rows: 
+  Serial.begin(9600);
+  
   lcd.begin(16, 2);
-  
-  // Print a message to the LCD.
-  lcd.print("qa");
+  lcd.print("Pedroso");
 
-  Serial.begin(115200);
-  pinMode(sensorBatimentos,OUTPUT);
-  
+  pulseSensor.analogInput(Pulse);   
+  pulseSensor.blinkOnPulse(Led13);     
+  pulseSensor.setThreshold(Hold); 
+ 
+  pinMode(Led13,OUTPUT);
+
+  if (pulseSensor.begin()) {
+    Serial.println("Ativando Leitor de Batimentos Cardiacos!"); 
+  }
 }
 
-void loop() {
-  // set the cursor to column 0, line 1
-  // (note: line 1 is the second row, since counting begins with 0):
-  lcd.setCursor(0, 0);
-  delay(2000);
-  //Print a message to second line of LCD
-  lcd.print("testeee");
 
-  sinal = analogRead(sensorBatimentos);
-  Serial.print("Sinal: ");
-  Serial.println(sinal);
+void loop() {
+  lcd.setCursor(0, 0);
+  lcd.print("Kodama");
+
+  int myBPM = pulseSensor.getBeatsPerMinute();
+
+  Signal = analogRead(Pulse);
+  
+  //Serial.print("Sinal: ");
+  //Serial.println(Signal);
+
+  if (pulseSensor.sawStartOfBeat()) {           
+   Serial.println("Lendo Batimentos Cardiacos! ♥"); 
+   Serial.print("BPM: ");                      
+   Serial.println(myBPM);                        
+  }
+
+  delay(20);
 }
