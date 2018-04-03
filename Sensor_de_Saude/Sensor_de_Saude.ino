@@ -18,7 +18,7 @@ void setup() {
   Serial.begin(9600);
   
   lcd.begin(16, 2);
-  lcd.print("Pedroso");
+  //lcd.print("Pedroso");
 
   pulseSensor.analogInput(Pulse);   
   pulseSensor.blinkOnPulse(Led13);     
@@ -28,13 +28,14 @@ void setup() {
 
   if (pulseSensor.begin()) {
     Serial.println("Ativando Leitor de Batimentos Cardiacos!"); 
+    //lcd.print("Ativando Leitor de Batimentos Cardiacos!");
   }
 }
 
 
 void loop() {
   lcd.setCursor(0, 0);
-  lcd.print("Kodama");
+  //lcd.print("Kodama");
 
   int myBPM = pulseSensor.getBeatsPerMinute();
 
@@ -46,7 +47,11 @@ void loop() {
   if (pulseSensor.sawStartOfBeat()) {           
    Serial.println("Lendo Batimentos Cardiacos! ♥"); 
    Serial.print("BPM: ");                      
-   Serial.println(myBPM);                        
+   Serial.println(myBPM);                      
+
+   
+   lcd.print("BPM: ");                      
+   lcd.print(myBPM);  
   }
 
   delay(20);
