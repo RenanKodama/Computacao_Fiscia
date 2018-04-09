@@ -1,4 +1,3 @@
-
 #define USE_ARDUINO_INTERRUPTS true    
 
 #include <PulseSensorPlayground.h> 
@@ -11,17 +10,16 @@ PulseSensorPlayground pulseSensor;
 const int Pulse = 4;    //leitor BPM
 const int Led13 = 13;   //led
 const int Temp = 3;     //leitor de Temperatura
-float Temperatura;
-int Signal;             //sinal
 int Hold = 550;
-
+int vetorTemp[10];
+int posicao = 0;
+int tamanho = 10;
 
 void setup() {
   Serial.begin(9600);
   
   lcd.begin(16, 2);
-  //lcd.print("Pedroso");
-
+  
   pulseSensor.analogInput(Pulse);   
   pulseSensor.blinkOnPulse(Led13);     
   pulseSensor.setThreshold(Hold); 
@@ -29,44 +27,85 @@ void setup() {
   pinMode(Led13,OUTPUT);
 
   if (pulseSensor.begin()) {
-    Serial.println("Ativando Leitor de Batimentos Cardiacos!"); 
-    //lcd.print("Ativando Leitor de Batimentos Cardiacos!");
+    lcd.print("Ativando Leitor de Batimentos Cardiacos!");
   }
-
-  
 }
 
+String leStringSerial(){
+  String conteudo = "";
+  char caractere;
+  
+  while(Serial.available() > 0) {
+    caractere = Serial.read();
+    if (caractere != '\n'){
+      conteudo.concat(caractere);
+      lcd.clear();
+    }
+    delay(10);
+  }
+    
+  Serial.print("Recebi: ");
+  Serial.println(conteudo);
+
+  lcd.print(conteudo);
+  return conteudo;
+}
+
+void batimentosCardiacos(){
+ int myBPM = pulseSensor.getBeatsPerMinute();  
+                                              
+  if (pulseSensor.sawStartOfBeat()) {            
+   Serial.println("A HeartBeat Happened ! ");
+   Serial.print("BPM: ");                       
+   Serial.println(myBPM);                       
+
+   lcd.print("Lendo Batimentos! "); 
+   lcd.setCursor(0,1);
+   lcd.print("BPM: ");                        
+   lcd.print(myBPM); 
+  }
+  delay(20);                   
+}
+
+float Ler_Temperatura(){
+  float temperatura = ( 5.0 * analogRead(Temp) * 100.0) / 1024.0;   
+  Serial.println(temperatura);
+  vetorTemp[posicao] = temperatura;
+  posicao++;
+}
+
+float Calcula_Temperatura(){
+  float soma = 0;
+  for (int i=0;i<tamanho;i++){
+    soma = soma + vetorTemp[i];
+  }
+
+  soma = soma/tamanho;
+
+  return soma;
+}
+
+void Temperatura(){
+  while(posicao<tamanho){
+    Ler_Temperatura();
+    delay(10000);
+  }
+  float temperatura = Calcula_Temperatura();
+  //lcd.clear();
+  //lcd.print("Temperatura: ");
+  lcd.setCursor(0,1);
+  lcd.print(temperatura);
+}
 
 void loop() {
-  lcd.setCursor(0, 0);
-  //lcd.print("Kodama");
-
-  int myBPM = pulseSensor.getBeatsPerMinute();
-
-  Signal = analogRead(Pulse);
+  //batimentosCardiacos();
   
+  Temperatura();
+  
+  //leStringSerial();
+ 
   //Serial.print("Sinal: ");
   //Serial.println(Signal); 
 
-  
-  Temperatura = ( 5.0 * analogRead(Temp) * 100.0) / 1024.0;   
-  //Serial.print("Temperatura: ");
-  //Serial.println(Temperatura);
-  lcd.setCursor(0,0);
-  lcd.print(Temperatura);
-  
-
-  if (pulseSensor.sawStartOfBeat()) {           
-   Serial.println("Lendo Batimentos Cardiacos! ♥"); 
-   Serial.print("BPM: ");                      
-   Serial.println(myBPM);                    
-
-   lcd.setCursor(0,1);
-   
-   lcd.print("BPM: ");                      
-   lcd.print(myBPM);  
-   //lcd.print(" ♥");
-  }
-
-  delay(20);
+  //delay(2000);
 }
