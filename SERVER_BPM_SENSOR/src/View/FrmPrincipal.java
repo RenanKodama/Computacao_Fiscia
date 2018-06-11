@@ -150,6 +150,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         btnBatimentos.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
         btnBatimentos.setText("Ler Batimentos");
+        btnBatimentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatimentosActionPerformed(evt);
+            }
+        });
 
         btnTemperatura.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
         btnTemperatura.setText("Ler Temperatura");
@@ -359,6 +364,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         controller.RemoverUsuario(this);
     }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void btnBatimentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatimentosActionPerformed
+        // TODO add your handling code here:
+        controller.AbrirTelaBatimentos();
+    }//GEN-LAST:event_btnBatimentosActionPerformed
 
     /**
      * @param args the command line arguments

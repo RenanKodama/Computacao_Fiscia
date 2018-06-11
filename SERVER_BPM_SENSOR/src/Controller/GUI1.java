@@ -56,12 +56,12 @@ public class GUI1 extends JFrame implements Observer {
         }
         
         SerialPort p = acessaArduino.getSerialPort();
-        acessaArduino.setDataToArduino(p, "b");
+        acessaArduino.setDataToArduino(p, "batimentos");
     }
 
     
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 }

@@ -6,6 +6,7 @@ import DAOs.DAOUsuario;
 import DAOs.DB_Direct;
 import Model.Sensor;
 import Model.Usuario;
+import View.FrmBatimentos;
 import View.FrmCadastro;
 import View.FrmPrincipal;
 import java.util.List;
@@ -67,6 +68,19 @@ public class PrincipalController {
     public void AbriTelaCadastro() {
         FrmCadastro cadastro = new FrmCadastro(this);
         cadastro.setVisible(true);
+    }
+    
+    public void AbrirTelaBatimentos(){
+        FrmBatimentos batimentos = new FrmBatimentos(this);
+        batimentos.setVisible(true);
+        
+    }
+    
+    public void PeencheTelaBatimentos(FrmBatimentos batimentos){
+        String dadosFromArduino = batimentos.getAcessaArduino().getDadosArduino().trim();
+        JLabel b = batimentos.getLblBatimentos();
+        b.setText(dadosFromArduino);
+        batimentos.setLblBatimentos(b);
     }
 
     public void SalvarUsuario(FrmCadastro tela) {

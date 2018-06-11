@@ -6,9 +6,11 @@
 package View;
 
 import Arduino.AcessaArduino;
+import Controller.PrincipalController;
 import gnu.io.SerialPort;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JLabel;
 
 /**
  *
@@ -20,12 +22,13 @@ public class FrmBatimentos extends javax.swing.JFrame implements Observer {
      * Creates new form FrmBatimentos
      */
     AcessaArduino acessaArduino;
-    SerialPort p;
     
-    public FrmBatimentos() {
+    PrincipalController controller;
+    
+    public FrmBatimentos(PrincipalController controller) {
         initComponents();
         setLocationRelativeTo(null);
-        
+        this.controller = controller;
         try {
             acessaArduino = new AcessaArduino(this); //passa como parâmetro a classe GUI (this) para informar quem é o Observador
             System.out.println("Porta detectada: " + acessaArduino.getPortaSelecionada());
@@ -34,8 +37,8 @@ public class FrmBatimentos extends javax.swing.JFrame implements Observer {
             System.out.println("Erro ao acionar o Arduino");
 
         }
-         p = acessaArduino.getSerialPort();
-        acessaArduino.setDataToArduino(p, "b");
+         SerialPort p = acessaArduino.getSerialPort();
+        acessaArduino.setDataToArduino(p, "batimentos");
     }
 
     /**
@@ -224,37 +227,54 @@ public class FrmBatimentos extends javax.swing.JFrame implements Observer {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmBatimentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmBatimentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmBatimentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmBatimentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmBatimentos().setVisible(true);
-            }
-        });
+    public AcessaArduino getAcessaArduino() {
+        return acessaArduino;
     }
+
+    public void setAcessaArduino(AcessaArduino acessaArduino) {
+        this.acessaArduino = acessaArduino;
+    }
+
+    
+
+    
+
+    public JLabel getLblBatimentos() {
+        return lblBatimentos;
+    }
+
+    public void setLblBatimentos(JLabel lblBatimentos) {
+        this.lblBatimentos = lblBatimentos;
+    }
+
+    public JLabel getLblIdade() {
+        return lblIdade;
+    }
+
+    public void setLblIdade(JLabel lblIdade) {
+        this.lblIdade = lblIdade;
+    }
+
+    public JLabel getLblNome() {
+        return lblNome;
+    }
+
+    public void setLblNome(JLabel lblNome) {
+        this.lblNome = lblNome;
+    }
+
+    public JLabel getLblPeso() {
+        return lblPeso;
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public void setLblPeso(JLabel lblPeso) {
+        this.lblPeso = lblPeso;
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSair;
@@ -275,7 +295,7 @@ public class FrmBatimentos extends javax.swing.JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        controller.PeencheTelaBatimentos(this);
         
     }
 }
