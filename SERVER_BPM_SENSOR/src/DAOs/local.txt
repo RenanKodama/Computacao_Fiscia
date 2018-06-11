@@ -1,0 +1,5 @@
+localhost
+Pulse_Sensor
+root
+geeo1234
+
